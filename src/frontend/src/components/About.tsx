@@ -29,11 +29,10 @@ export default function About() {
             />
             <img
               src="/assets/generated/tarot-about.dim_500x400.jpg"
-              alt="Vrishu Tarot reading session"
+              alt="Vrish Tarot reading session"
               className="relative z-10 w-full rounded-3xl object-cover shadow-2xl border border-[#D6B46E]/20"
               style={{ boxShadow: "0 20px 60px rgba(214, 180, 110, 0.15)" }}
             />
-            {/* Floating badge */}
             <div className="absolute -bottom-6 -right-6 bg-[#1A1026] border border-[#D6B46E]/40 rounded-2xl p-5 shadow-gold z-20">
               <p className="font-cinzel text-3xl font-bold text-[#D6B46E]">
                 5+
@@ -51,14 +50,14 @@ export default function About() {
             transition={{ duration: 0.8, delay: 0.2 }}
           >
             <p className="text-[#D6B46E] text-sm uppercase tracking-[0.3em] mb-4 font-poppins">
-              ✦ About Vrishu Tarot
+              ✦ About Vrish Tarot
             </p>
             <h2 className="font-cinzel text-4xl lg:text-5xl font-bold text-[#F2E7D2] mb-6 leading-tight">
               Your Guide to the
               <span className="gold-gradient-text"> Mystical Arts</span>
             </h2>
             <p className="text-[#C9C1B3] leading-relaxed mb-6 font-poppins">
-              Welcome to Vrishu Tarot — where ancient wisdom meets modern
+              Welcome to Vrish Tarot — where ancient wisdom meets modern
               insight. With over 5 years of devoted practice, I offer profound
               tarot readings that help you navigate life's complexities with
               clarity and confidence.

@@ -24,7 +24,6 @@ export default function Hero() {
           "radial-gradient(ellipse at 30% 20%, #6b21a8 0%, #3b0d8a 40%, #1e0550 100%)",
       }}
     >
-      {/* Starfield */}
       {STARS.map((star) => (
         <span
           key={star.id}
@@ -42,7 +41,6 @@ export default function Hero() {
         />
       ))}
 
-      {/* Nebula glow */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -53,7 +51,6 @@ export default function Hero() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 pt-28 pb-20 w-full">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
-          {/* Left: Content */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             animate={{ opacity: 1, x: 0 }}
@@ -85,7 +82,7 @@ export default function Hero() {
             >
               Let the ancient wisdom of tarot illuminate your path. Gain clarity
               on love, career, and spiritual growth through deeply personal
-              readings with Vrishu Tarot.
+              readings with Vrish Tarot.
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -115,7 +112,6 @@ export default function Hero() {
               </button>
             </motion.div>
 
-            {/* Stats */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -139,7 +135,6 @@ export default function Hero() {
             </motion.div>
           </motion.div>
 
-          {/* Right: Image */}
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
@@ -178,7 +173,6 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* Scroll indicator dots */}
         <div className="flex justify-center gap-2 mt-16">
           {[0, 1, 2].map((i) => (
             <div

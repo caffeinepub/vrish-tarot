@@ -77,15 +77,8 @@ export default function Footer() {
               >
                 <Instagram size={16} /> @vaira_gan
               </a>
-              <a
-                href="tel:8882123244"
-                data-ocid="footer.link"
-                className="flex items-center gap-3 text-[#C9C1B3] hover:text-[#D6B46E] transition-colors font-poppins text-sm"
-              >
-                📞 8882123244
-              </a>
               <p className="text-[#C9C1B3] text-xs font-poppins mt-1">
-                Available 10am – 8pm IST
+                Available 24 Hours / 7 Days
               </p>
             </div>
           </div>
@@ -116,10 +109,8 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Divider */}
         <div className="h-px bg-gradient-to-r from-transparent via-[#D6B46E]/20 to-transparent mb-8" />
 
-        {/* Bottom */}
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-[#C9C1B3]/60 text-xs font-poppins">
             © {year} Vrish Tarot. All rights reserved.

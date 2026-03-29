@@ -35,7 +35,6 @@ export default function Navbar() {
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        {/* Logo */}
         <button
           type="button"
           data-ocid="nav.link"
@@ -46,11 +45,10 @@ export default function Navbar() {
             ✦
           </div>
           <span className="font-cinzel text-xl font-semibold text-[#F2E7D2] tracking-wide">
-            Vrishu Tarot
+            Vrish Tarot
           </span>
         </button>
 
-        {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
             <button
@@ -65,7 +63,6 @@ export default function Navbar() {
           ))}
         </nav>
 
-        {/* CTA */}
         <div className="hidden md:block">
           <button
             type="button"
@@ -77,7 +74,6 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Mobile toggle */}
         <button
           type="button"
           className="md:hidden text-[#D6B46E] p-2"
@@ -88,7 +84,6 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Mobile menu */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
