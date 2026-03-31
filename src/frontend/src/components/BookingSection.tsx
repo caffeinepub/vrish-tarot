@@ -7,7 +7,7 @@ import {
   Phone,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import type { CreateBookingRequestArgs } from "../backend.d";
 import { useCreateBooking } from "../hooks/useQueries";
@@ -20,30 +20,46 @@ const serviceOptions = [
     label: "Personal Reading – 10 min",
     price: 499,
     duration: "10 min",
+    minutes: 10,
   },
   {
     value: 2n,
     label: "Personal Reading – 20 min",
     price: 799,
     duration: "20 min",
+    minutes: 20,
   },
   {
     value: 3n,
     label: "Personal Reading – 30 min",
     price: 999,
     duration: "30 min",
+    minutes: 30,
   },
   {
     value: 4n,
     label: "Personal Reading – 60 min",
     price: 1699,
     duration: "60 min",
+    minutes: 60,
   },
-  { value: 5n, label: "Relationship Clarity", price: 800, duration: "45 min" },
-  { value: 6n, label: "Spell", price: 1200, duration: "60 min" },
+  {
+    value: 5n,
+    label: "Relationship Clarity",
+    price: 800,
+    duration: "45 min",
+    minutes: 45,
+  },
+  { value: 6n, label: "Spell", price: 1200, duration: "60 min", minutes: 60 },
 ];
 
 const PHONE = "8882123244";
+
+function formatTime(seconds: number): string {
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+}
 
 export default function BookingSection() {
   const createBooking = useCreateBooking();
@@ -59,6 +75,39 @@ export default function BookingSection() {
   const [submitted, setSubmitted] = useState(false);
   const [payStep, setPayStep] = useState<null | number>(null);
   const [paid, setPaid] = useState(false);
+  const [sessionDuration, setSessionDuration] = useState<number | null>(null);
+  const [timerSeconds, setTimerSeconds] = useState<number | null>(null);
+  const [sessionEnded, setSessionEnded] = useState(false);
+
+  // Countdown effect
+  useEffect(() => {
+    if (timerSeconds === null) return;
+    if (timerSeconds <= 0) {
+      setSessionEnded(true);
+      setTimerSeconds(null);
+      return;
+    }
+    const id = setInterval(() => {
+      setTimerSeconds((prev) => (prev !== null ? prev - 1 : null));
+    }, 1000);
+    return () => clearInterval(id);
+  }, [timerSeconds]);
+
+  const resetAll = () => {
+    setPayStep(null);
+    setPaid(false);
+    setSessionDuration(null);
+    setTimerSeconds(null);
+    setSessionEnded(false);
+  };
+
+  const startTimer = () => {
+    if (sessionDuration !== null) {
+      setTimerSeconds(sessionDuration * 60);
+    }
+  };
+
+  const isWarning = timerSeconds !== null && timerSeconds <= 120;
 
   const update = (field: string, value: string | bigint) =>
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -392,6 +441,7 @@ export default function BookingSection() {
                     type="button"
                     onClick={() => {
                       setPayStep(s.price);
+                      setSessionDuration(s.minutes);
                       setPaid(false);
                     }}
                     className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-[#D6B46E]/20 bg-[#1A1026]/60 text-left hover:border-[#D6B46E]/50 hover:bg-[#D6B46E]/5 transition-all group"
@@ -465,6 +515,47 @@ export default function BookingSection() {
         </div>
       </div>
 
+      {/* Floating Session Timer */}
+      <AnimatePresence>
+        {timerSeconds !== null && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: 20 }}
+            className="fixed bottom-6 right-6 z-50"
+          >
+            <div
+              className="rounded-2xl px-5 py-4 shadow-2xl border flex flex-col items-center min-w-[120px]"
+              style={{
+                background: "#1A1026",
+                borderColor: isWarning
+                  ? "rgba(239,68,68,0.5)"
+                  : "rgba(214,180,110,0.4)",
+                boxShadow: isWarning
+                  ? "0 0 24px rgba(239,68,68,0.3)"
+                  : "0 0 24px rgba(214,180,110,0.2)",
+              }}
+            >
+              <p
+                className="text-[10px] uppercase tracking-widest mb-1"
+                style={{ color: isWarning ? "#f87171" : "#D6B46E" }}
+              >
+                {isWarning ? "⚠ Ending Soon" : "🌙 Session"}
+              </p>
+              <p
+                className="font-mono font-bold text-2xl tabular-nums"
+                style={{ color: isWarning ? "#f87171" : "#D6B46E" }}
+              >
+                {formatTime(timerSeconds)}
+              </p>
+              <p className="text-[10px] mt-1" style={{ color: "#C9C1B3" }}>
+                remaining
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Payment Modal */}
       <AnimatePresence>
         {payStep !== null && (
@@ -514,7 +605,7 @@ export default function BookingSection() {
                         Pay via UPI to:
                       </p>
                       <p className="text-[#F2E7D2] font-semibold text-base tracking-wide">
-                        vrishu.tarot@upi
+                        nehanegi03@ybl
                       </p>
                       <p className="text-[#C9C1B3] text-xs mt-2">
                         Or scan the QR code on Instagram: @vaira_gan
@@ -555,12 +646,19 @@ export default function BookingSection() {
                   <h3 className="font-serif text-2xl font-bold text-[#F2E7D2] mb-2">
                     Payment Confirmed!
                   </h3>
-                  <p className="text-[#C9C1B3] text-sm mb-6">
+                  <p className="text-[#C9C1B3] text-sm mb-2">
                     Call Vrish now to begin your session
                   </p>
+                  {sessionDuration && (
+                    <p className="text-[#D6B46E] text-xs mb-6">
+                      🌙 {sessionDuration} min session · Timer starts when you
+                      call
+                    </p>
+                  )}
 
                   <a
                     href={`tel:${PHONE}`}
+                    onClick={startTimer}
                     className="block w-full bg-gradient-to-r from-[#D6B46E] to-[#C9A55A] text-[#0B0720] py-4 rounded-xl text-base font-bold mb-3 hover:from-[#E2C37D] hover:to-[#D6B46E] transition-all"
                   >
                     <Phone className="inline mr-2" size={18} />
@@ -583,6 +681,55 @@ export default function BookingSection() {
                   </button>
                 </motion.div>
               )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Session Ended Modal */}
+      <AnimatePresence>
+        {sessionEnded && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm px-4"
+          >
+            <motion.div
+              initial={{ scale: 0.85, opacity: 0, y: 30 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.85, opacity: 0 }}
+              className="bg-gradient-to-b from-[#1A1026] to-[#231436] border border-[#D6B46E]/40 rounded-2xl p-8 max-w-sm w-full shadow-2xl text-center"
+              style={{ boxShadow: "0 0 60px rgba(214,180,110,0.15)" }}
+            >
+              <div className="text-5xl mb-4">🌙</div>
+              <h3 className="font-serif text-2xl font-bold text-[#F2E7D2] mb-3">
+                Session Time Complete 🌙
+              </h3>
+              <p className="text-[#C9C1B3] text-sm mb-8 leading-relaxed">
+                Your{" "}
+                <span className="text-[#D6B46E] font-semibold">
+                  {sessionDuration} min
+                </span>{" "}
+                reading session has ended. Book another session to continue your
+                spiritual journey with Vrish.
+              </p>
+              <div className="space-y-3">
+                <button
+                  type="button"
+                  onClick={resetAll}
+                  className="w-full bg-gradient-to-r from-[#D6B46E] to-[#C9A55A] text-[#0B0720] py-4 rounded-xl text-sm font-bold hover:from-[#E2C37D] hover:to-[#D6B46E] transition-all"
+                >
+                  Book Again ✦
+                </button>
+                <button
+                  type="button"
+                  onClick={resetAll}
+                  className="w-full py-3 rounded-xl text-sm text-[#C9C1B3] border border-[#D6B46E]/20 hover:bg-[#D6B46E]/5 transition-all"
+                >
+                  Close
+                </button>
+              </div>
             </motion.div>
           </motion.div>
         )}
