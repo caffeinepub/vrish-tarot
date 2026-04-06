@@ -4,7 +4,7 @@ import {
   IndianRupee,
   Loader2,
   Lock,
-  Phone,
+  MessageCircle,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
@@ -53,8 +53,6 @@ const serviceOptions = [
   { value: 6n, label: "Spell", price: 1200, duration: "60 min", minutes: 60 },
 ];
 
-const PHONE = "8882123244";
-
 function formatTime(seconds: number): string {
   const m = Math.floor(seconds / 60);
   const s = seconds % 60;
@@ -66,7 +64,6 @@ export default function BookingSection() {
   const [form, setForm] = useState({
     name: "",
     email: "",
-    phone: "",
     sessionID: 1n,
     date: "",
     time: "anytime",
@@ -117,7 +114,7 @@ export default function BookingSection() {
     const args: CreateBookingRequestArgs = {
       name: form.name,
       email: form.email,
-      phone: form.phone,
+      phone: "",
       sessionID: form.sessionID,
       date: form.date,
       time: form.time,
@@ -208,39 +205,22 @@ export default function BookingSection() {
               </motion.div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label
-                      htmlFor="booking-name"
-                      className="block text-[#C9C1B3] text-xs mb-1.5 tracking-wide"
-                    >
-                      Full Name *
-                    </label>
-                    <input
-                      id="booking-name"
-                      required
-                      value={form.name}
-                      onChange={(e) => update("name", e.target.value)}
-                      placeholder="Your name"
-                      className={inputClass}
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="booking-phone"
-                      className="block text-[#C9C1B3] text-xs mb-1.5 tracking-wide"
-                    >
-                      Your Phone *
-                    </label>
-                    <input
-                      id="booking-phone"
-                      required
-                      value={form.phone}
-                      onChange={(e) => update("phone", e.target.value)}
-                      placeholder="+91 XXXXX XXXXX"
-                      className={inputClass}
-                    />
-                  </div>
+                <div>
+                  <label
+                    htmlFor="booking-name"
+                    className="block text-[#C9C1B3] text-xs mb-1.5 tracking-wide"
+                  >
+                    Full Name *
+                  </label>
+                  <input
+                    id="booking-name"
+                    required
+                    value={form.name}
+                    onChange={(e) => update("name", e.target.value)}
+                    placeholder="Your name"
+                    className={inputClass}
+                    data-ocid="booking.input"
+                  />
                 </div>
                 <div>
                   <label
@@ -377,6 +357,7 @@ export default function BookingSection() {
                   type="submit"
                   disabled={createBooking.isPending}
                   className="w-full bg-gradient-to-r from-[#D6B46E] to-[#C9A55A] text-[#0B0720] py-4 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed hover:from-[#E2C37D] hover:to-[#D6B46E] transition-all"
+                  data-ocid="booking.submit_button"
                 >
                   {createBooking.isPending ? (
                     <>
@@ -401,7 +382,7 @@ export default function BookingSection() {
             <div className="flex-1 bg-gradient-to-b from-[#1A1026] to-[#231436] rounded-2xl p-8 border border-[#D6B46E]/20 flex flex-col justify-center">
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-16 h-16 rounded-full bg-[#D6B46E]/10 border border-[#D6B46E]/30 flex items-center justify-center">
-                  <Phone className="text-[#D6B46E]" size={28} />
+                  <MessageCircle className="text-[#D6B46E]" size={28} />
                 </div>
                 <div>
                   <h3 className="font-serif text-xl font-bold text-[#F2E7D2]">
@@ -473,7 +454,7 @@ export default function BookingSection() {
                 {emailBookOptions.map((s) => (
                   <a
                     key={s.value.toString()}
-                    href={`mailto:${TAROT_EMAIL}?subject=Booking Request – ${s.label}&body=Hello Vrish,%0D%0A%0D%0AI would like to book a ${s.label} session.%0D%0A%0D%0AName: %0D%0APhone: %0D%0APreferred Date/Time: %0D%0AMessage: `}
+                    href={`mailto:${TAROT_EMAIL}?subject=Booking Request – ${s.label}&body=Hello Vrish,%0D%0A%0D%0AI would like to book a ${s.label} session.%0D%0A%0D%0AName: %0D%0APreferred Date/Time: %0D%0AMessage: `}
                     className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-[#D6B46E]/20 bg-[#1A1026]/60 text-left hover:border-[#D6B46E]/50 hover:bg-[#D6B46E]/5 transition-all group"
                   >
                     <p className="text-[#F2E7D2] text-sm font-medium">
@@ -647,22 +628,23 @@ export default function BookingSection() {
                     Payment Confirmed!
                   </h3>
                   <p className="text-[#C9C1B3] text-sm mb-2">
-                    Call Vrish now to begin your session
+                    Connect with Vrish on Instagram to begin your session
                   </p>
                   {sessionDuration && (
                     <p className="text-[#D6B46E] text-xs mb-6">
                       🌙 {sessionDuration} min session · Timer starts when you
-                      call
+                      connect
                     </p>
                   )}
 
                   <a
-                    href={`tel:${PHONE}`}
+                    href="https://www.instagram.com/vaira_gan"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     onClick={startTimer}
                     className="block w-full bg-gradient-to-r from-[#D6B46E] to-[#C9A55A] text-[#0B0720] py-4 rounded-xl text-base font-bold mb-3 hover:from-[#E2C37D] hover:to-[#D6B46E] transition-all"
                   >
-                    <Phone className="inline mr-2" size={18} />
-                    Call Now
+                    Connect on Instagram →
                   </a>
 
                   <p className="text-[#C9C1B3] text-xs">
